@@ -41,6 +41,7 @@ export interface LocalConfig {
 }
 
 export interface CliOptions {
+  command: "csv";
   apply: boolean;
   dataDir: string;
 }

@@ -4,6 +4,7 @@ import { loadLocalConfig, parseCliOptions } from "./config";
 import { createLogger } from "./logger";
 import { parseMacquarieCsvFile } from "./parsers/macquarieCsv";
 import { reconcile } from "./reconciler";
+import type { CliOptions } from "./types";
 import { createYnabClient } from "./ynabClient";
 
 const subtractDays = (date: Date, days: number): Date => {
@@ -13,8 +14,7 @@ const subtractDays = (date: Date, days: number): Date => {
   return result;
 };
 
-export const runCli = async (args: string[]): Promise<void> => {
-  const options = parseCliOptions(args);
+const runImportCsvCommand = async (options: CliOptions): Promise<void> => {
   const logger = createLogger("ynab-sync");
 
   if (!options.apply) {
@@ -117,4 +117,15 @@ export const runCli = async (args: string[]): Promise<void> => {
     created: totalCreated,
     dryRun: !options.apply,
   });
+};
+
+export const runCli = async (args: string[]): Promise<void> => {
+  const options = parseCliOptions(args);
+
+  switch (options.command) {
+    case "csv": {
+      await runImportCsvCommand(options);
+      return;
+    }
+  }
 };

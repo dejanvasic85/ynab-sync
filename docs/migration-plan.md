@@ -18,14 +18,14 @@
   - `banksy/data/*`
 - All sensitive/runtime values must be loaded at runtime from a local config file.
 - Runtime config file must be gitignored.
-- Dry-run must be default; writes to YNAB require explicit `--apply`.
+- Apply must be default; dry-run requires explicit `--dry-run`.
 - Add checks before commit to ensure no sensitive literals were introduced.
 
 ## Runtime Config Strategy (Local Only)
 - Single source of runtime truth: local JSON config file.
 - No SSM, no S3, no cloud config backends.
-- Suggested path: `./config/local.json` (gitignored).
-- Suggested template path: `./config/local.example.json` (safe to commit).
+- Suggested path: `./config/local.json` (inside gitignored `config/` folder).
+- Keep config examples in `README.md` instead of committed local config templates.
 
 Required runtime values:
 - `ynabApiKey`
@@ -83,12 +83,13 @@ Deliverable:
 - Unit tests with mocks and dry-run integration path.
 
 ### Phase 4: Bun CLI Command
-- Implement `import-csv` command:
+- Implement `csv` command:
   - read local runtime config
   - parse CSV
   - reconcile
   - print summary
-  - apply writes only with `--apply`
+  - apply writes by default
+  - support `--dry-run` to skip YNAB writes
 - Include summary counters:
   - parsed
   - ignored
@@ -119,13 +120,13 @@ Deliverable:
 - Safe onboarding path for local usage.
 
 ## Acceptance Criteria
-- Macquarie CSV import works in dry-run and apply modes.
+- Macquarie CSV import works in apply (default) and dry-run (`--dry-run`) modes.
 - No hardcoded account IDs/memo ignore lists in committed source.
 - No secrets or local bank data tracked by git.
 - Tests pass via Bun.
 
 ## Rollout Checklist
-- [ ] Create `config/local.json` from committed example template
+- [ ] Create `config/local.json` from README example
 - [ ] Run dry-run and verify reconciliation output
 - [ ] Run apply for narrow date range
 - [ ] Confirm created transactions in YNAB

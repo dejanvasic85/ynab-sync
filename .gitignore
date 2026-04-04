@@ -70,8 +70,8 @@ web_modules/
 .env.*
 !.env.example
 
-# local runtime config
-config/local.json
+# local runtime config and csv inputs
+config/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

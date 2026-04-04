@@ -3,22 +3,29 @@ import { describe, expect, it } from "bun:test";
 import { parseCliOptions, parseLocalConfig } from "./config";
 
 describe("config", () => {
-  it("parses apply CLI option", () => {
-    expect(parseCliOptions([]).apply).toBe(false);
-    expect(parseCliOptions(["--apply"]).apply).toBe(true);
-    expect(parseCliOptions([]).dataDir).toBe("data");
-    expect(parseCliOptions(["--data-dir", "fixtures"]).dataDir).toBe("fixtures");
+  it("parses csv CLI options", () => {
+    expect(parseCliOptions(["csv"]).command).toBe("csv");
+    expect(parseCliOptions(["csv"]).apply).toBe(true);
+    expect(parseCliOptions(["csv", "--dry-run"]).apply).toBe(false);
+    expect(parseCliOptions(["csv"]).dataDir).toBe("config");
+    expect(parseCliOptions(["csv", "--data-dir", "fixtures"]).dataDir).toBe("fixtures");
   });
 
   it("throws when data-dir flag has no value", () => {
-    expect(() => parseCliOptions(["--data-dir"])).toThrow("--data-dir requires a path value.");
+    expect(() => parseCliOptions(["csv", "--data-dir"])).toThrow("--data-dir requires a path value.");
+  });
+
+  it("throws when command is missing or unsupported", () => {
+    expect(() => parseCliOptions([])).toThrow("Usage: bun run index.ts csv [--data-dir <path>] [--dry-run]");
+    expect(() => parseCliOptions(["sync"]))
+      .toThrow("Usage: bun run index.ts csv [--data-dir <path>] [--dry-run]");
   });
 
   it("validates required local config fields", () => {
     const parsed = parseLocalConfig({
       ynabApiKey: "token",
       ynabBudgetId: "budget",
-      accounts: [{ fileName: "Visa - Macquarie.csv", ynabAccountId: "acc-id", negativeOnly: true }],
+      accounts: [{ fileName: "sample-credit-card.csv", ynabAccountId: "acc-id", negativeOnly: true }],
       memosToIgnore: [],
       numberOfDaysToFetch: 120,
       includeOnlyAfterDays: 60,
