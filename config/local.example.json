@@ -1,0 +1,19 @@
+{
+  "ynabApiKey": "replace-with-ynab-token",
+  "ynabBudgetId": "replace-with-ynab-budget-id",
+  "accounts": [
+    {
+      "fileName": "Visa - Macquarie.csv",
+      "ynabAccountId": "replace-with-ynab-account-id",
+      "negativeOnly": true
+    },
+    {
+      "fileName": "Principle Offset.csv",
+      "ynabAccountId": "replace-with-ynab-account-id",
+      "negativeOnly": false
+    }
+  ],
+  "memosToIgnore": [],
+  "numberOfDaysToFetch": 120,
+  "includeOnlyAfterDays": 60
+}

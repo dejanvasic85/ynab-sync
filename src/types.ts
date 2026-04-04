@@ -42,4 +42,5 @@ export interface LocalConfig {
 
 export interface CliOptions {
   apply: boolean;
+  dataDir: string;
 }

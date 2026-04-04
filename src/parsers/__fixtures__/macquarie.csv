@@ -1,0 +1,4 @@
+Transaction Date,Details,Account,Category,Subcategory,Notes,Debit,Credit,Balance,Original Description
+15 Oct 2025,Coffee Shop,Everyday Account,Food,,,$5.20,,"$1,234.80",
+14 Oct 2025,Salary,Everyday Account,Income,,,"","$2,500.00","$1,240.00",
+10 Aug 2025,Old Transaction,Everyday Account,Other,,,$10.00,,$500.00,
