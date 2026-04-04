@@ -36,6 +36,15 @@ Required runtime values:
 
 ## Multi-Phase Execution Plan
 
+## Phase Progress
+- [x] Phase 0: Baseline and Guardrails
+- [x] Phase 1: Domain and Reconciliation Core
+- [ ] Phase 2: Macquarie CSV Parser
+- [ ] Phase 3: YNAB Client Layer
+- [ ] Phase 4: Bun CLI Command
+- [ ] Phase 5: Secret and Data Leak Checks
+- [ ] Phase 6: Docs and Onboarding
+
 ### Phase 0: Baseline and Guardrails
 - Scaffold `src/` for CLI architecture.
 - Add strict config validation (Zod) for local config file shape.
