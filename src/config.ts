@@ -24,8 +24,16 @@ export const parseLocalConfig = (rawValue: unknown): LocalConfig => {
 };
 
 export const parseCliOptions = (args: string[]): CliOptions => {
+  const dataDirIndex = args.findIndex((arg) => arg === "--data-dir");
+  const dataDir = dataDirIndex >= 0 ? args[dataDirIndex + 1] : undefined;
+
+  if (dataDirIndex >= 0 && (!dataDir || dataDir.startsWith("--"))) {
+    throw new Error("--data-dir requires a path value.");
+  }
+
   return {
     apply: args.includes("--apply"),
+    dataDir: dataDir ?? "data",
   };
 };
 

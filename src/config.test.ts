@@ -6,6 +6,12 @@ describe("config", () => {
   it("parses apply CLI option", () => {
     expect(parseCliOptions([]).apply).toBe(false);
     expect(parseCliOptions(["--apply"]).apply).toBe(true);
+    expect(parseCliOptions([]).dataDir).toBe("data");
+    expect(parseCliOptions(["--data-dir", "fixtures"]).dataDir).toBe("fixtures");
+  });
+
+  it("throws when data-dir flag has no value", () => {
+    expect(() => parseCliOptions(["--data-dir"])).toThrow("--data-dir requires a path value.");
   });
 
   it("validates required local config fields", () => {
