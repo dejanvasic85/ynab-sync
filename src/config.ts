@@ -24,16 +24,24 @@ export const parseLocalConfig = (rawValue: unknown): LocalConfig => {
 };
 
 export const parseCliOptions = (args: string[]): CliOptions => {
-  const dataDirIndex = args.findIndex((arg) => arg === "--data-dir");
-  const dataDir = dataDirIndex >= 0 ? args[dataDirIndex + 1] : undefined;
+  const command = args[0];
+
+  if (command !== "csv") {
+    throw new Error("Usage: bun run index.ts csv [--data-dir <path>] [--dry-run]");
+  }
+
+  const commandArgs = args.slice(1);
+  const dataDirIndex = commandArgs.findIndex((arg) => arg === "--data-dir");
+  const dataDir = dataDirIndex >= 0 ? commandArgs[dataDirIndex + 1] : undefined;
 
   if (dataDirIndex >= 0 && (!dataDir || dataDir.startsWith("--"))) {
     throw new Error("--data-dir requires a path value.");
   }
 
   return {
-    apply: args.includes("--apply"),
-    dataDir: dataDir ?? "data",
+    command,
+    apply: !commandArgs.includes("--dry-run"),
+    dataDir: dataDir ?? "config",
   };
 };
 
@@ -41,7 +49,7 @@ export const loadLocalConfig = async (filePath = defaultLocalConfigPathValue): P
   const configFile = Bun.file(filePath);
 
   if (!(await configFile.exists())) {
-    throw new Error(`Missing local config file at ${filePath}. Copy config/local.example.json to ${filePath}.`);
+    throw new Error(`Missing local config file at ${filePath}. Create it using the README example config.`);
   }
 
   const rawValue = await configFile.json();
