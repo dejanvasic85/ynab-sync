@@ -25,7 +25,17 @@ describe("parseMacquarieCsvFile", () => {
       date: "2025-10-14",
       description: "Salary",
     });
-    expect(parsed.balance).toBe(1240);
+    expect(parsed.balance).toBe(1234.8);
+  });
+
+  it("throws when numeric fields are invalid", async () => {
+    await expect(
+      parseMacquarieCsvFile({
+        accountName: "Macquarie Visa",
+        filePath: join(import.meta.dir, "__fixtures__/macquarie-invalid-number.csv"),
+        includeOnlyAfter: new Date("2025-09-01T00:00:00.000Z"),
+      }),
+    ).rejects.toThrow("Invalid Macquarie numeric value");
   });
 
   it("throws when file is missing", async () => {

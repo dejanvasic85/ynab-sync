@@ -30,7 +30,7 @@ const parseCsvLine = (line: string): string[] => {
     const char = line[i];
 
     if (char === '"') {
-      const isEscapedQuote = line[i + 1] === '"';
+      const isEscapedQuote = isInQuotes && line[i + 1] === '"';
       if (isEscapedQuote) {
         currentValue += '"';
         i += 1;
@@ -72,7 +72,18 @@ const parseDateToIso = (value: string): string => {
 
 const parseNumber = (value: string): number => {
   const cleaned = value.replaceAll("$", "").replaceAll(",", "").trim();
-  return cleaned ? Number.parseFloat(cleaned) : 0;
+
+  if (!cleaned) {
+    return 0;
+  }
+
+  const parsedValue = Number.parseFloat(cleaned);
+
+  if (Number.isNaN(parsedValue)) {
+    throw new Error(`Invalid Macquarie numeric value '${value}'.`);
+  }
+
+  return parsedValue;
 };
 
 const isAfterDate = (dateValue: string, threshold: Date): boolean => {
@@ -113,6 +124,7 @@ export const parseMacquarieCsvFile = async ({
   const headers = parseCsvLine(headerLine);
   const transactions: BankTransaction[] = [];
   let latestBalance = 0;
+  let hasLatestBalance = false;
 
   for (let lineIndex = 1; lineIndex < lines.length; lineIndex += 1) {
     const currentLine = lines[lineIndex];
@@ -130,7 +142,10 @@ export const parseMacquarieCsvFile = async ({
 
     const debit = parseNumber(getFieldValue(record, "Debit"));
     const credit = parseNumber(getFieldValue(record, "Credit"));
-    latestBalance = parseNumber(getFieldValue(record, "Balance"));
+    if (!hasLatestBalance) {
+      latestBalance = parseNumber(getFieldValue(record, "Balance"));
+      hasLatestBalance = true;
+    }
 
     transactions.push({
       amount: debit > 0 ? -debit : credit,

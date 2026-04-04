@@ -9,6 +9,7 @@ import { createYnabClient } from "./ynabClient";
 const subtractDays = (date: Date, days: number): Date => {
   const result = new Date(date);
   result.setUTCDate(result.getUTCDate() - days);
+  result.setUTCHours(0, 0, 0, 0);
   return result;
 };
 
@@ -34,13 +35,20 @@ export const runCli = async (args: string[]): Promise<void> => {
   });
 
   const includeOnlyAfter = subtractDays(new Date(), config.includeOnlyAfterDays);
+  const ynabSinceDate = subtractDays(new Date(), config.numberOfDaysToFetch);
   const ynabAccounts = await ynabClient.loadAccounts();
-  const recentTransactions = await ynabClient.fetchRecentTransactions(includeOnlyAfter.toISOString().slice(0, 10));
+  const recentTransactions = await ynabClient.fetchRecentTransactions(ynabSinceDate.toISOString().slice(0, 10));
 
   const ynabTransactionsByAccountId = new Map<string, typeof recentTransactions>();
   for (const transaction of recentTransactions) {
-    const existingTransactions = ynabTransactionsByAccountId.get(transaction.accountId) ?? [];
-    ynabTransactionsByAccountId.set(transaction.accountId, [...existingTransactions, transaction]);
+    let existingTransactions = ynabTransactionsByAccountId.get(transaction.accountId);
+
+    if (!existingTransactions) {
+      existingTransactions = [];
+      ynabTransactionsByAccountId.set(transaction.accountId, existingTransactions);
+    }
+
+    existingTransactions.push(transaction);
   }
 
   let totalParsed = 0;
