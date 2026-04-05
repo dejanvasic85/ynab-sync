@@ -11,6 +11,7 @@ describe("parser registry", () => {
 
   it("resolves registered parser names", () => {
     expect(isBankParserName("macquarie")).toBe(true);
+    expect(isBankParserName("unknown")).toBe(false);
     expect(typeof getBankParser("macquarie")).toBe("function");
   });
 
