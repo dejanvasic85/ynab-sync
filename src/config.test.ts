@@ -25,7 +25,7 @@ describe("config", () => {
     const parsed = parseLocalConfig({
       ynabApiKey: "token",
       ynabBudgetId: "budget",
-      accounts: [{ fileName: "sample-credit-card.csv", ynabAccountId: "acc-id", negativeOnly: true }],
+      accounts: [{ fileName: "sample-credit-card.csv", ynabAccountId: "acc-id", parser: "macquarie", negativeOnly: true }],
       memosToIgnore: [],
       numberOfDaysToFetch: 120,
       includeOnlyAfterDays: 60,
@@ -46,5 +46,18 @@ describe("config", () => {
         includeOnlyAfterDays: 0,
       });
     }).toThrow();
+  });
+
+  it("throws when account parser is unsupported", () => {
+    expect(() => {
+      parseLocalConfig({
+        ynabApiKey: "token",
+        ynabBudgetId: "budget",
+        accounts: [{ fileName: "sample-credit-card.csv", ynabAccountId: "acc-id", parser: "unknown", negativeOnly: true }],
+        memosToIgnore: [],
+        numberOfDaysToFetch: 120,
+        includeOnlyAfterDays: 60,
+      });
+    }).toThrow("Unsupported parser");
   });
 });
