@@ -28,6 +28,7 @@ export interface BudgetAccount {
 export interface AccountConfig {
   fileName: string;
   ynabAccountId: string;
+  parser: string;
   negativeOnly: boolean;
 }
 

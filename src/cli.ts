@@ -2,7 +2,7 @@ import { join } from "node:path";
 
 import { loadLocalConfig, parseCliOptions } from "./config";
 import { createLogger } from "./logger";
-import { parseMacquarieCsvFile } from "./parsers/macquarieCsv";
+import { getBankParser } from "./parsers/registry";
 import { reconcile } from "./reconciler";
 import type { CliOptions } from "./types";
 import { createYnabClient } from "./ynabClient";
@@ -60,7 +60,8 @@ const runImportCsvCommand = async (options: CliOptions): Promise<void> => {
   for (const accountConfig of config.accounts) {
     const filePath = join(options.dataDir, accountConfig.fileName);
     const accountName = accountConfig.fileName.replace(/\.csv$/i, "");
-    const parsedAccount = await parseMacquarieCsvFile({
+    const parseCsvFile = getBankParser(accountConfig.parser);
+    const parsedAccount = await parseCsvFile({
       accountName,
       filePath,
       includeOnlyAfter,
@@ -99,6 +100,7 @@ const runImportCsvCommand = async (options: CliOptions): Promise<void> => {
 
     logger.info("CSV parsed", {
       fileName: accountConfig.fileName,
+      parser: accountConfig.parser,
       accountName: parsedAccount.name,
       parsed: parsedAccount.transactions.length,
       ignored: reconciliationResult.ignored.length,

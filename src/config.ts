@@ -1,10 +1,14 @@
 import { z } from "zod";
 
+import { bankParserNamesValue, isBankParserName } from "./parsers/registry";
 import type { CliOptions, LocalConfig } from "./types";
 
 const accountConfigSchemaValue = z.object({
   fileName: z.string().min(1),
   ynabAccountId: z.string().min(1),
+  parser: z.string().min(1).refine(isBankParserName, {
+    message: `Unsupported parser. Supported parsers: ${bankParserNamesValue.join(", ")}.`,
+  }),
   negativeOnly: z.boolean(),
 });
 

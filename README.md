@@ -1,7 +1,7 @@
 <h1 align="center">ynab-sync</h1>
 
 <p align="center">
-  A Bun CLI that imports Macquarie CSV transactions into YNAB with reconciliation safeguards.
+  A Bun CLI that imports bank CSV transactions into YNAB with reconciliation safeguards.
 </p>
 
 <p align="center">
@@ -59,11 +59,13 @@ Create `config/local.json`:
     {
       "fileName": "sample-credit-card.csv",
       "ynabAccountId": "replace-with-ynab-account-id",
+      "parser": "macquarie",
       "negativeOnly": true
     },
     {
       "fileName": "sample-offset-account.csv",
       "ynabAccountId": "replace-with-ynab-account-id",
+      "parser": "macquarie",
       "negativeOnly": false
     }
   ],
@@ -99,7 +101,8 @@ bun run index.ts csv
 
 - `ynabApiKey`: YNAB API token
 - `ynabBudgetId`: target budget ID
-- `accounts[]`: map CSV file names to YNAB account IDs
+- `accounts[]`: map CSV file names to YNAB account IDs and parser names
+- `accounts[].parser`: parser to use per account (currently `macquarie`)
 - `accounts[].negativeOnly`: optional positive-amount filter per account
 - `memosToIgnore[]`: exact memo values to ignore
 - `numberOfDaysToFetch`: YNAB transaction lookback window
@@ -114,6 +117,7 @@ bun run index.ts csv
 
 - Missing config file: create `config/local.json` with the schema above
 - CSV not found: verify `accounts[].fileName` and `--data-dir`
+- Parser mismatch: verify `accounts[].parser` matches a registered parser
 - Account mismatch: verify each `ynabAccountId` exists in your budget
 - Unexpected duplicates: run `--dry-run` and inspect `existing`/`new` counts
 
