@@ -18,7 +18,7 @@ const runImportCsvCommand = async (options: CliOptions): Promise<void> => {
   const logger = createLogger("ynab-sync");
 
   if (!options.apply) {
-    logger.info("Running in dry-run mode. Pass --apply to enable YNAB writes.");
+    logger.info("Running in dry-run mode. Remove --dry-run to enable YNAB writes.");
   }
 
   const config = await loadLocalConfig();

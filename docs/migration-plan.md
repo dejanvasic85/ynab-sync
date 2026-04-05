@@ -41,9 +41,9 @@ Required runtime values:
 - [x] Phase 1: Domain and Reconciliation Core
 - [x] Phase 2: Macquarie CSV Parser
 - [x] Phase 3: YNAB Client Layer
-- [ ] Phase 4: Bun CLI Command
+- [x] Phase 4: Bun CLI Command
 - [ ] Phase 5: Secret and Data Leak Checks
-- [ ] Phase 6: Docs and Onboarding
+- [x] Phase 6: Docs and Onboarding
 
 ### Phase 0: Baseline and Guardrails
 - Scaffold `src/` for CLI architecture.
@@ -126,8 +126,8 @@ Deliverable:
 - Tests pass via Bun.
 
 ## Rollout Checklist
-- [ ] Create `config/local.json` from README example
-- [ ] Run dry-run and verify reconciliation output
-- [ ] Run apply for narrow date range
+- [x] Create `config/local.json` from README example
+- [x] Run dry-run and verify reconciliation output
+- [x] Run apply for narrow date range
 - [ ] Confirm created transactions in YNAB
 - [ ] Re-run same CSV to verify no duplicates
