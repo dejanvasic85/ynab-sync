@@ -1,4 +1,5 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>dejanvasic85/renovate-config:default"]
+  "extends": ["github>dejanvasic85/renovate-config:default"],
+  "packageManager": "bun"
 }
